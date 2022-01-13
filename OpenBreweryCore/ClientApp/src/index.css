@@ -1,6 +1,22 @@
 @media (max-width: 767px) {
     /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
-    body {
-        padding-top: 50px;
-    }
+}
+
+.input-group {
+    width: 90%;
+    padding-bottom: 5px;
+}
+
+.form-control {
+    width: 60% !important;
+}
+
+.btn {
+    margin-left: 10px;
+    color: white;
+    background-color: black;
+    width: 85px;
+}
+.btn:hover, .btn:active, .btn:focus {
+    color: lightgray;
 }

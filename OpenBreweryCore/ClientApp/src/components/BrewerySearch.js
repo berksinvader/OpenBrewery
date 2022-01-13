@@ -69,6 +69,9 @@ export class BrewerySearch extends Component {
                         if (data.length < 1) {
                             this.state.emptyResult = true;
                         }
+                        else {
+                            this.state.emptyResult = false;
+                        }
                         this.state.breweries = data;
                         this.state.callback = true;
                         if (!this.state.loading) {
@@ -128,6 +131,7 @@ export class BrewerySearch extends Component {
                         >
                             Search
                         </button>
+                        &nbsp;
                         <button
                             className='btn'
                             type='button'

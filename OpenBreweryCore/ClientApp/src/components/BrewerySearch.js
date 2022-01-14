@@ -1,11 +1,13 @@
 ﻿import React, { Component } from 'react';
+import queryString from 'query-string';
 
 export class BrewerySearch extends Component {
     displayName = BrewerySearch.name
 
     constructor(props) {
         super(props);
-        this.state = { breweries: [], loading: false, input: "", emptyResult: false, callback: false };
+        let queries = queryString.parse(this.props.location.search);
+        this.state = { breweries: [], loading: false, input: queries.search_text, emptyResult: false, callback: false, init: true };
     }
 
     static renderBreweryTable(breweries) {
@@ -22,7 +24,11 @@ export class BrewerySearch extends Component {
                 <tbody>
                     {breweries.map(brewery =>
                         <tr key={brewery.id}>
-                            <td>{brewery.name}</td>
+                            <td>
+                                <a href={"./Details?brewery_id=" + brewery.id + "&search_text=" + document.getElementById('searchPhrase').value}>
+                                    {brewery.name}
+                                </a>
+                            </td>
                             <td>{brewery.brewery_type[0].toUpperCase() + brewery.brewery_type.slice(1)}</td>
                             <td>
                                 <a
@@ -61,26 +67,29 @@ export class BrewerySearch extends Component {
     render() {
 
         let getBreweries = () => {
-            this.setState({ input: document.getElementById('searchPhrase').value });
+            if (document.getElementById('searchPhrase') != null) {
+                this.setState({ input: document.getElementById('searchPhrase').value });
+            }
+            this.setState({ init: false });
             if (!this.state.callback) {
-                fetch("https://api.openbrewerydb.org/breweries/search?query=" + document.getElementById('searchPhrase').value)
+                fetch("https://api.openbrewerydb.org/breweries/search?query=" + this.state.input)
                     .then((response) => response.json())
                     .then((data) => {
                         if (data.length < 1) {
-                            this.state.emptyResult = true;
+                            this.setState({ emptyResult: true });
                         }
                         else {
-                            this.state.emptyResult = false;
+                            this.setState({ emptyResult: false });
                         }
-                        this.state.breweries = data;
-                        this.state.callback = true;
+                        this.setState({ breweries: data });
+                        this.setState({ callback: true });
                         if (!this.state.loading) {
                             setTimeout(() => {
-                                this.state.loading = true;
+                                this.setState({ loading: true });
                                 getBreweries();
                                 setTimeout(() => {
-                                    this.state.callback = true;
-                                    this.state.loading = false;
+                                    this.setState({ callback: true });
+                                    this.setState({ loading: false });
                                     getBreweries();
                                 }, 500);
                             }, 100);
@@ -92,15 +101,19 @@ export class BrewerySearch extends Component {
                     });
             }
             else if (!this.state.loading) {
-                this.state.callback = false;
-                this.state.loading = false;
+                this.setState({ callback: false });
+                this.setState({ loading: false });
             }
         };
 
         let handleClearingResults = () => {
-            this.state.breweries = [];
+            this.setState({ breweries: [] });
             this.setState({ input : ""});
         };
+
+        let init =
+            this.state.init ? (this.state.input == null ? (this.setState({ init: false })) : getBreweries()) : null;
+        
 
         let contents = this.state.loading
             ? <p><em>Loading...</em></p>
@@ -144,6 +157,8 @@ export class BrewerySearch extends Component {
                 </div>
 
                 {contents}
+
+                {init}
             </div>
         );
     }

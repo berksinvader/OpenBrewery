@@ -4,6 +4,18 @@ import GoogleMapReact from 'google-map-react';
 
 const MapComponent = ({ text }) => <div>{text}</div>;
 
+const formatNumber = (phoneStr) => {
+    let cleaned = ("", phoneStr).replace(/\D/g, "");
+
+    let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+
+    if (match) {
+        return "(" + match[1] + ") " + match[2] + "-" + match[3];
+    }
+
+    return null;
+};
+
 export class BreweryMapDetails extends Component {
     displayName = BreweryMapDetails.name
     
@@ -42,26 +54,46 @@ export class BreweryMapDetails extends Component {
                 }
                 return (
                     <div>
-                        <div>{this.state.brewery_data.name}</div>
-                        <div>{this.state.brewery_data.brewery_type}</div>
-                        <div>{this.state.brewery_data.longitude}</div>
-                        <div>{this.state.brewery_data.latitude}</div>
-                        <div>{this.state.brewery_data.phone}</div>
-                        <div>{this.state.brewery_data.website_url}</div>
-
-                        <div style={{ height: '50vh', width: '100%' }}>
-                            <GoogleMapReact
-                                bootstrapURLKeys={{ key: "AIzaSyDwGUy2Fn_hjlv2xgsdU5CP2U9V-YtOxlc" }}
-                                defaultCenter={{ lat: Number(this.state.brewery_data.latitude), lng: Number(this.state.brewery_data.longitude) }}
-                                defaultZoom={11}
-                            >
-                                <MapComponent
-                                    lat={this.state.brewery_data.latitude}
-                                    lng={this.state.brewery_data.longitude}
-                                    text={this.state.brewery_data.name}
-                                />
-                            </GoogleMapReact>
+                        <input type='hidden' id='lat' value={this.state.brewery_data.latitude} />
+                        <input type='hidden' id='lon' value={this.state.brewery_data.longitude} />
+                        <div><h3>{this.state.brewery_data.name}</h3></div>
+                        <div>
+                            {(this.state.brewery_data.street == null ? "N/A" : this.state.brewery_data.street) + ", " + (this.state.brewery_data.city == null ? "N/A" : this.state.brewery_data.city) + ", " + (this.state.brewery_data.state == null ? "N/A" : this.state.brewery_data.state) + " " + (this.state.brewery_data.postal_code == null ? "N/A" : this.state.brewery_data.postal_code)}
                         </div>
+                        <div>{ formatNumber(this.state.brewery_data.phone) }</div>
+                        <div>
+                            {this.state.brewery_data.website_url ? (
+                                <a
+                                    aria-label='Brewery website'
+                                    href={this.state.brewery_data.website_url}
+                                    target='_blank'
+                                    rel='noreferrer noopener'
+                                >
+                                    {this.state.brewery_data.website_url}
+                                </a>
+                            ) : (
+                                <span>None</span>
+                            )}
+                        </div>
+
+                        <div></div>
+
+                        { (this.state.brewery_data.latitude != null && this.state.brewery_data.longitude != null) ?
+                            <div style={{ height: '50vh', width: '100%' }}>
+                                <GoogleMapReact
+                                    bootstrapURLKeys={{ key: "AIzaSyDwGUy2Fn_hjlv2xgsdU5CP2U9V-YtOxlc" }}
+                                    defaultCenter={{ lat: Number(this.state.brewery_data.latitude), lng: Number(this.state.brewery_data.longitude) }}
+                                    defaultZoom={11}
+                                >
+                                    <MapComponent
+                                        lat={this.state.brewery_data.latitude}
+                                        lng={this.state.brewery_data.longitude}
+                                        text={this.state.brewery_data.name}
+                                    />
+                                </GoogleMapReact>
+                            </div>
+                            : <div><em>Map not available</em></div>
+                        }
 
                     </div>
                 );

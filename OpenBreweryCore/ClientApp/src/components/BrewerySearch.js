@@ -91,8 +91,8 @@ export class BrewerySearch extends Component {
                                     this.setState({ callback: true });
                                     this.setState({ loading: false });
                                     getBreweries();
-                                }, 500);
-                            }, 100);
+                                }, 300);
+                            }, 10);
                         }
                     })
                     .catch((error) => {

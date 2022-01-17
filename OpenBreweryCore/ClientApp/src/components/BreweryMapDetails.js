@@ -2,18 +2,21 @@
 import queryString from 'query-string';
 import GoogleMapReact from 'google-map-react';
 
-const MapComponent = ({ text }) => <div>{text}</div>;
+const MapComponent = ({ text }) => <div className="map-pin">{text}</div>;
 
 const formatNumber = (phoneStr) => {
-    let cleaned = ("", phoneStr).replace(/\D/g, "");
+    if (phoneStr != null) {
+        let cleaned = ("", phoneStr).replace(/\D/g, "");
 
-    let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        let match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
 
-    if (match) {
-        return "(" + match[1] + ") " + match[2] + "-" + match[3];
+        if (match) {
+            return "(" + match[1] + ") " + match[2] + "-" + match[3];
+        }
     }
-
-    return null;
+    else {
+        return null;
+    }
 };
 
 export class BreweryMapDetails extends Component {
@@ -21,8 +24,6 @@ export class BreweryMapDetails extends Component {
     
     constructor(props) {
         super(props);
-        
-
         let queries = queryString.parse(this.props.location.search);
         this.state = { brewery_id: queries.brewery_id, search_text: queries.search_text, brewery_data: null, loading: false };
     }
@@ -109,7 +110,7 @@ export class BreweryMapDetails extends Component {
                 <p>This component demonstrates retrieving the brewery details and a map of the brewery.</p>
 
                 <div>
-                    <a href={"../?search_text=" + this.state.search_text}>Return to search</a>
+                    <a class="btn btn-return" href={"../?search_text=" + this.state.search_text}>Return to search</a>
                 </div>
 
                 <div className='details-container'>

@@ -2,6 +2,9 @@
     /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
 }
 
+body {
+    background-color: #ffff66;
+}
 .input-group {
     width: 90%;
     padding-bottom: 5px;
@@ -17,6 +20,30 @@
     background-color: black;
     width: 85px;
 }
+
 .btn:hover, .btn:active, .btn:focus {
     color: lightgray;
+}
+
+.btn-return {
+    width: 140px;
+}
+
+.map-pin {
+    top: 50%;
+    left: 50%;
+    width: 88px;
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 5px 5px 5px;
+    background-color: #3366ff;
+    border: 2px solid #fff;
+    border-radius: 10%;
+    user-select: none;
+    transform: translate(-50%, -50%);
+}
+
+ .map-pin:hover {
+     z-index: -1;
 }

@@ -7,7 +7,7 @@ export class BrewerySearch extends Component {
     constructor(props) {
         super(props);
         let queries = queryString.parse(this.props.location.search);
-        this.state = { breweries: [], loading: false, input: queries.search_text, emptyResult: false, callback: false, init: true };
+        this.state = { breweries: [], loading: false, input: queries.search_text, emptyResult: false, callback: false, init: true, alt_item: false };
     }
 
     static renderBreweryTable(breweries) {
